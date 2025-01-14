@@ -1,0 +1,13 @@
+body,
+code {
+  margin: 0;
+  padding: 0;
+  font-family: "Acme", sans-serif;
+  background-color: #d2e0fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Acme&family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Jua&family=Poor+Story&display=swap");
