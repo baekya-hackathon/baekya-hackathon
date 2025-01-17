@@ -40,6 +40,8 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+        with:
+          install: true
 
       - name: Build and Push Docker image
         run: docker buildx build --platform linux/amd64,linux/arm64 -t gisu1102/baekya-hackathon:latest ./backend --push
