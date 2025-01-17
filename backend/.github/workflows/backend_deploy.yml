@@ -9,6 +9,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          submodules: true
+          token: '${{ secrets.SUB_TOKEN }}'
 
       - name: Set up JDK
         uses: actions/setup-java@v2
