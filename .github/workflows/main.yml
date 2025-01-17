@@ -20,14 +20,15 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Navigate to backend directory
-        run: cd backend
+
+      - name: Make gradlew executable (if necessary)
+        run: chmod +x ./backend/gradlew
 
       - name: Remove previous snapshot.jar
-        run: rm -rf ./build/libs/*.jar
+        run: rm -rf ./backend/build/libs/*.jar
 
       - name: Build with Gradle
-        run: ./gradlew build -x test
+        run: ./backend/gradlew build -x test
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -36,7 +37,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker image
-        run: docker buildx build --platform linux/amd64,linux/arm64 -t baekya-hackathon/baekya-backend:latest .
+        run: docker buildx build --platform linux/amd64,linux/arm64 -t baekya-hackathon/baekya-backend:latest ./backend
 
       - name: Tag Docker image for push
         run: docker tag baekya-hackathon/baekya-backend:latest gisu1102/baekya-hackathon:latest
@@ -47,13 +48,13 @@ jobs:
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
-            host: ${{ secrets.EC2_HOST }}
-            username: ${{ secrets.EC2_USERNAME }}
-            key: ${{ secrets.SSH_PRIVATE_KEY }}
-            script: |
-              ssh spring-server "sudo docker ps -a"
-              ssh spring-server "sudo docker rm -f baekya-backend || true"
-              ssh spring-server "sudo docker pull gisu1102/baekya-hackathon:latest"
-              ssh spring-server "sudo docker run -d -p 8080:8080 --name baekya-backend gisu1102/baekya-hackathon:latest"
-              ssh spring-server "sudo docker images -f 'dangling=true' -q | xargs sudo docker rmi || true"
-              ssh spring-server "sudo docker ps -a"
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            ssh spring-server "sudo docker ps -a"
+            ssh spring-server "sudo docker rm -f baekya-backend || true"
+            ssh spring-server "sudo docker pull gisu1102/baekya-hackathon:latest"
+            ssh spring-server "sudo docker run -d -p 8080:8080 --name baekya-backend gisu1102/baekya-hackathon:latest"
+            ssh spring-server "sudo docker images -f 'dangling=true' -q | xargs sudo docker rmi || true"
+            ssh spring-server "sudo docker ps -a"
