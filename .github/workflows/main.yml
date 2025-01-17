@@ -22,8 +22,6 @@ jobs:
           java-version: '17'
       - name: Navigate to backend directory
         run: cd backend
-      - name: Make gradlew executable (if necessary)
-        run: chmod +x gradlew
 
       - name: Remove previous snapshot.jar
         run: rm -rf ./build/libs/*.jar
