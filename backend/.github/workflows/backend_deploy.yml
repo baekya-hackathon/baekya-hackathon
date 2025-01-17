@@ -1,4 +1,4 @@
-name: Backend Deploy CI/CD
+name: Backend Deploy CI/cd
 on:
   push:
     branches:
