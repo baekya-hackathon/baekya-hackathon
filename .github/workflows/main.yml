@@ -43,7 +43,7 @@ jobs:
           docker buildx create --use
 
       - name: Build Docker image
-        run: docker buildx build --platform linux/amd64,linux/arm64 -t baekya-hackathon/baekya-backend:latest ./backend --push
+        run: docker buildx build --platform linux/amd64,linux/arm64 -t baekya-hackathon/baekya-backend:latest ./backend --load
 
       - name: Tag Docker image for push
         run: docker tag baekya-hackathon/baekya-backend:latest gisu1102/baekya-hackathon:latest
