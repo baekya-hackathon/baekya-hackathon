@@ -46,10 +46,6 @@ jobs:
       - name: Build and Push Docker image
         run: docker buildx build --platform linux/amd64,linux/arm64 -t gisu1102/baekya-hackathon:latest ./backend --push
 
-      - name: Add EC2 Host to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Debug SSH connection
         run: |
