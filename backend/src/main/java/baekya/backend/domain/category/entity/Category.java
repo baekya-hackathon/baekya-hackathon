@@ -18,7 +18,7 @@ public class Category {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private String name;
+    private CategoryType name;
 
     @OneToMany(mappedBy = "category")
     private List<Article> articles;

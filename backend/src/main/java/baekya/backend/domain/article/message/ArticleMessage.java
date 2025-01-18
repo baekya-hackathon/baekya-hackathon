@@ -1,4 +1,4 @@
-package baekya.backend.domain.category.message;
+package baekya.backend.domain.article.message;
 
 import baekya.backend.common.response.ResponseMessage;
 import lombok.Getter;
@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum CategoryMessage implements ResponseMessage {
+public enum ArticleMessage implements ResponseMessage {
+    SUCCESS_GET_ARTICLES("기사 조회에 성공했습니다.", HttpStatus.OK);
 
-    ;
     private final String message;
     private final HttpStatus status;
 }
