@@ -24,4 +24,13 @@ public class Article {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Builder
+    public Article(String title, String keyword, String summary, String newsLink, Category category) {
+        this.title = title;
+        this.keyword = keyword;
+        this.summary = summary;
+        this.newsLink = newsLink;
+        this.category = category;
+    }
 }

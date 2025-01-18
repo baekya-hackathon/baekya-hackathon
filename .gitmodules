@@ -1,9 +1,4 @@
 [submodule "backend/src/main/resources"]
 	path = backend/src/main/resources
 	url = git@github.com:baekya-hackathon/resource-repo.git
-[submodule "backend/src/main/path/to/resources-repo"]
-	path = backend/src/main/path/to/resources-repo
-	url = git@github.com:baekya-hackathon/resource-repo.git
-[submodule "backend/src/main/resources-repo"]
-	path = backend/src/main/resources-repo
-	url = git@github.com:baekya-hackathon/resource-repo.git
+
