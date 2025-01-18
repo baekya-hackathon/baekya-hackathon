@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @Service
 public class ApiService {
 
@@ -49,10 +50,10 @@ public class ApiService {
         return String.format(
                 "Summarize the latest %s Korea daily news articles from the following website: %s.\n" +
                         "Each summary must include:\n" +
-                        "- 해당 뉴스의 제목 (Title)\n" +
-                        "- 3–5문장으로 요약된 뉴스 본문에 대한 요약 내용 (Summary)\n" +
-                        "- 3–5개의 뉴스 본문의 중요한 키워드 (Keywords)\n" +
-                        "- 해당 뉴스 링크 (NewsLink)\n" +
+                        "- 해당 뉴스의 제목 (title)\n" +
+                        "- 4–5문장으로 요약된 뉴스 본문에 대한 요약 내용 (summary)\n" +
+                        "- 4-5개의 뉴스 본문의 중요한 키워드 (keyword)\n" +
+                        "- 해당 뉴스 링크 (newsLink)\n" +
                         "4개의 뉴스를 JSON 배열 형식으로 제공하세요. 각 항목은 다음 키를 포함해야 합니다: 'title', 'summary', 'keywords', 'NewsLink'.",
                 category, categoryUrl
         );
@@ -101,10 +102,10 @@ public class ApiService {
      */
     public Map<String, List<Map<String, String>>> getNewsByCategories() {
         Map<String, String> descriptions = Map.of(
-                "SOCIAL", "사회",
-                "POLITICS", "정치",
-                "ECONOMY", "경제",
-                "LIFE", "생활/문화"
+                "social", "사회",
+                "politics", "정치",
+                "economy", "경제",
+                "life", "생활/문화"
         );
 
         Map<String, List<Map<String, String>>> newsByCategory = new HashMap<>();
@@ -132,8 +133,8 @@ public class ApiService {
                 Map<String, String> articleData = new HashMap<>();
                 articleData.put("제목", article.path("title").asText());
                 articleData.put("요약", article.path("summary").asText());
-                articleData.put("키워드", article.path("keywords").toString());
-                articleData.put("뉴스 링크", article.path("NewsLink").asText());
+                articleData.put("키워드", article.path("keyword").toString());
+                articleData.put("뉴스 링크", article.path("newsLink").asText());
                 articles.add(articleData);
             }
             return articles;
