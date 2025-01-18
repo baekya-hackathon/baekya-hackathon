@@ -35,4 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
-src/main/resources
+/src/main/resources
+/src/main/resources-repo
+src/main/resources-repo
