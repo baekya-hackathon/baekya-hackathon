@@ -5,6 +5,8 @@ import economyImg from '../images/economy.jpg';
 import societyImg from '../images/society.jpg';
 import cultureImg from '../images/culture.jpg';
 import '../components/Category.css';
+import { useEffect } from 'react';
+
 
 function Category() {
     const categories = [    

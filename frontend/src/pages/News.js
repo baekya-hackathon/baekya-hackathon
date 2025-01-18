@@ -1,6 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
+
+import { Button } from 'react-bootstrap';
+
+
+
 const NewContainer = styled.div`
   width: 100%;
   height: 100vh;
@@ -79,6 +84,13 @@ function News() {
     content: "뉴스 내용이 여기에 들어갑니다..."
   };
 
+  const handleSpeak = () => {
+    const speech = new SpeechSynthesisUtterance(news.content);
+    window.speechSynthesis.speak(speech);
+  };
+
+  
+
   return (
     <NewContainer>
       <Header>
@@ -87,14 +99,20 @@ function News() {
             <Keyword key={index}>{keyword}</Keyword>
           ))}
         </Keywords>
+        <div>
+         
+        </div>
       </Header>
       <Body>
         <Content>
-          <NewsCard>
+          <NewsCard onClick={handleSpeak}>
             <Title>{news.title}</Title>
             <NewsContent>{news.content}</NewsContent>
+            
           </NewsCard>
         </Content>
+          
+        
       </Body>
     </NewContainer>
   );

@@ -3,7 +3,7 @@ export const mapCategory = (category) => {
       'politics': '정치',
       'economy': '경제',
       'society': '사회',
-      'culture': '생활/문화'
+      'culture': '생활'
       
     };
   
