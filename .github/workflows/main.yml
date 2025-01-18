@@ -3,17 +3,28 @@ on:
   push:
     branches:
       - main
+      - backend/plz/test
     paths:
       - 'backend/**'
 jobs:
   build:
     runs-on: ubuntu-22.04
+    env:
+      working-directory: ./
+      APPLICATION: ${{ secrets.APPLCATION_SECRET_YML }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
           submodules: true
           token: '${{ secrets.SUB_TOKEN }}'
+
+      - name: Create application.yml
+        run: |
+          mkdir -p ./src/main/resources
+          echo "${{ secrets.APPLICATION_SECRET_YML }}" > ./src/main/resources/application.yml
+          cat ./src/main/resources/application.yml
 
       - name: Set up JDK
         uses: actions/setup-java@v2
