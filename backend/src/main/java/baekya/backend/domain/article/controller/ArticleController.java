@@ -21,4 +21,10 @@ public class ArticleController implements ArticleApi {
           List<ArticleResponse> response = articleService.getArticleByCategoryName(category);
           return BaekyaApiResponse.createResponse(response, SUCCESS_GET_ARTICLES);
      }
+
+     @GetMapping("/category/{articleId}")
+     public BaekyaApiResponse<ArticleResponse> getArticleDetail(@PathVariable("articleId") Long articleId) {
+          ArticleResponse response = articleService.getArticleDetail(articleId);
+          return BaekyaApiResponse.createResponse(response, SUCCESS_GET_ARTICLES_DETAIL);
+     }
 }

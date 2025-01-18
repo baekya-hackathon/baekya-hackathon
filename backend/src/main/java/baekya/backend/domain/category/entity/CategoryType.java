@@ -1,7 +1,6 @@
 package baekya.backend.domain.category.entity;
 
 import baekya.backend.common.exception.BaekyaException;
-import baekya.backend.common.exception.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -13,16 +12,16 @@ import static baekya.backend.common.exception.ErrorCode.*;
 @Getter
 @RequiredArgsConstructor
 public enum CategoryType {
-    SOCIAL("사회"),
-    POLITICS("정치"),
-    ECONOMY("경제"),
-    LIFE("생활");
+    SOCIAL("social"),
+    POLITICS("politics"),
+    ECONOMY("economy"),
+    LIFE("life");
 
-    private final String name;
+    private final String value;
 
     public static CategoryType from(String value) {
         return Arrays.stream(values())
-                .filter(it -> Objects.equals(it.name, value))
+                .filter(it -> Objects.equals(it.value.toLowerCase(), value.toLowerCase()))
                 .findFirst()
                 .orElseThrow(() -> new BaekyaException(INVALID_CATEGORY_TYPE.getStatus(), INVALID_CATEGORY_TYPE.getMessage(), 400));
     }
