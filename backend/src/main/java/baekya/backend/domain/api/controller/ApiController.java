@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
+
 @RequiredArgsConstructor
 @RestController()
 public class ApiController {
@@ -18,7 +21,12 @@ public class ApiController {
     public ResponseEntity<?> getPerplexityResponse(@PathVariable String category) {
             String prompt = apiService.generatePrompt(category);
             String response = apiService.queryPerplexity(prompt);
-            return ResponseEntity.ok(response);
+
+            // 응답 파싱 및 저장
+            List<Map<String, Object>> parsedResponse = apiService.parseNewsResponse(response);
+            apiService.saveArticles(parsedResponse, category);
+
+        return ResponseEntity.ok(response);
     }
 
 }

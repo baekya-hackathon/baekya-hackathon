@@ -5,6 +5,7 @@ import baekya.backend.domain.article.dto.response.ArticleResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +33,22 @@ public interface ArticleApi {
                     @ApiResponse(
                             responseCode = "200",
                             description = "기사 조회에 성공했습니다.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ArticleResponse.class),
+                                    examples = @ExampleObject(value = "[\n" +
+                                            "  {\n" +
+                                            "    \"id\": 1,\n" +
+                                            "    \"title\": \"1경기 휴식 김민재, 볼프스부르크전 풀타임 복귀…뮌헨 3-2 승리\",\n" +
+                                            "    \"keyword\": \"김민재, 축구, 뮌헨, 분데스리가\"\n" +
+                                            "  },\n" +
+                                            "  {\n" +
+                                            "    \"id\": 2,\n" +
+                                            "    \"title\": \"U-21 차출 무산' 양민혁, 토트넘 1군 데뷔 가능성 UP... 공격진 줄부상 + 유스 출전 XXX\",\n" +
+                                            "    \"keyword\": \"양민혁, 토트넘, U-21\"\n" +
+                                            "  }\n" +
+                                            "]")
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "400",
@@ -66,7 +82,17 @@ public interface ArticleApi {
                     @ApiResponse(
                             responseCode = "200",
                             description = "기사 상세 조회에 성공했습니다.",
-                            content = @Content
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ArticleResponse.class),
+                                    examples = @ExampleObject(value = "{\n" +
+                                            "  \"id\": 1,\n" +
+                                            "  \"title\": \"U-21 차출 무산' 양민혁, 토트넘 1군 데뷔 가능성 UP... 공격진 줄부상 + 유스 출전 XXX\",\n" +
+                                            "  \"keyword\": \"양민혁, 토트넘, U-21\",\n" +
+                                            "  \"summary\": \"요약요약요약요약요약요약요약요약요약요약요약요약\",\n" +
+                                            "  \"newsLink\": \"http://example.com/news-article\"\n" +
+                                            "}")
+                            )
                     ),
                     @ApiResponse(
                             responseCode = "400",
