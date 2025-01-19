@@ -46,11 +46,6 @@ jobs:
       - name: Build and Push Docker image
         run: docker buildx build --platform linux/amd64,linux/arm64 -t gisu1102/baekya-hackathon:latest ./backend --push
 
-
-      - name: Debug SSH connection
-        run: |
-          ssh -v -o StrictHostKeyChecking=no -i ${{ secrets.EC2_HOST }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo hello"
-
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -58,10 +53,9 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            
-            ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} "sudo docker ps -a"
-            ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} "sudo docker rm -f baekya-backend || true"
-            ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} "sudo docker pull gisu1102/baekya-hackathon:latest"
-            ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} "sudo docker run -d -p 8080:8080 --name baekya-backend gisu1102/baekya-hackathon:latest"
-            ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} "sudo docker images -f 'dangling=true' -q | xargs sudo docker rmi || true"
-            ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_HOST }} "sudo docker ps -a"
+            sudo docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+            sudo docker pull gisu1102/baekya-hackathon:latest
+            sudo docker stop docker || true
+            sudo docker rm docker || true
+            sudo docker run -d -p 8080:8080 --name baekya-backend gisu1102/baekya-hackathon:latest
+            sudo docker image prune -f
