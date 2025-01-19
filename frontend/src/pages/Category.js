@@ -12,9 +12,11 @@ function Category() {
     const categories = [    
         { id: 1, keyword: "정치", link: "/category/politics", imageUrl: politicsImg },
         { id: 2, keyword: "경제" , link: "/category/economy", imageUrl: economyImg },
-        { id: 3, keyword: "사회" , link: "/category/society", imageUrl: societyImg },
-        { id: 4, keyword: "생활" , link: "/category/culture", imageUrl: cultureImg }
+        { id: 3, keyword: "사회" , link: "/category/social", imageUrl: societyImg },
+        { id: 4, keyword: "생활" , link: "/category/life", imageUrl: cultureImg }
     ];
+
+    
 
     return (
         <div className="App">

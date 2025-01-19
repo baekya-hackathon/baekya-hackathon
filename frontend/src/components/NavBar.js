@@ -28,20 +28,7 @@ function NavBar() {
                             transition: 'all 0.2s ease-in-out'
                         }}>홈</div>
                     </Nav.Link>
-                    <Nav.Link href="/search" className="text-center" style={{
-                        color: '#7E37F9',
-                        transition: 'all 0.2s ease-in-out'
-                    }}>
-                        <FaSearch size={35} style={{ 
-                            marginBottom: '5px',
-                            transition: 'all 0.2s ease-in-out'
-                        }} />
-                        <div className="mt-2" style={{ 
-                            fontSize: '20px',
-                            fontWeight: '700',
-                            transition: 'all 0.2s ease-in-out'
-                        }}>검색</div>
-                    </Nav.Link>
+                    
                 </Nav>
             </Container>
         </Navbar>

@@ -112,39 +112,14 @@ function NewsList() {
     const [items, setItems] = useState([]);
     const [hasMore, setHasMore] = useState(true);
     const [page, setPage] = useState(0);
+
+    const [news, setNews] = useState([{
+        id: 1,
+        title: "삼성전자, 갤럭시 S24 시리즈 AI 기능 공개",
+        keyword: ['삼성전자', '갤럭시', 'AI', '스마트폰'],
+    }]);
     
-    const news = [
-        {
-            id: 1,
-            title: "삼성전자, 갤럭시 S24 시리즈 AI 기능 공개",
-            keyWord: ['삼성전자', '갤럭시', 'AI', '스마트폰'],
-        },
-        {
-            id: 2,
-            title: "네이버, 초거대 AI 'HyperCLOVA X' 공개",
-            keyWord: ['네이버', 'AI', '하이퍼클로바', '인공지능'],
-        },
-        {
-            id: 3,
-            title: "SK텔레콤, AI 반도체 개발 착수",
-            keyWord: ['SK텔레콤', '반도체', 'AI칩', '투자'],
-        },
-        {
-            id: 4,
-            title: "카카오, AI 기반 신규 서비스 출시 예고",
-            keyWord: ['카카오', 'AI서비스', '카카오톡', '테크'],
-        },
-        {
-            id: 5,
-            title: "LG전자, AI 가전제품 라인업 확대",
-            keyWord: ['LG전자', 'AI가전', '스마트홈', 'IoT'],
-        },
-        {
-            id: 6,
-            title: "현대자동차, AI 자율주행 기술 고도화",
-            keyWord: ['현대자동차', '자율주행', 'AI기술', '모빌리티'],
-        }
-    ];
+    
 
     const location = useLocation();
     const currentUrl = location.pathname;
@@ -152,8 +127,27 @@ function NewsList() {
 
     const navigate = useNavigate();
 
+    const getNewsData = async () =>{
+        const response = await axios.get(`https://easynews.o-r.kr/v1/category?category=${category.toUpperCase()}`);
+        
+        const newsData = response.data.data.map(item => ({
+            id: item.id,
+            title: item.title,
+            keyword: item.keyword
+                .replace(/[\[\]]/g, '') // 대괄호 제거
+                .split(',')             // 쉼표로 분리
+                .map(k => k.trim())     // 각 항목의 앞뒤 공백 제거
+        }));
+        
+        if (response.data.message === "기사 조회에 성공했습니다.") {
+            setNews(newsData);
+        }
+        //setNews(response.data.data);
+    }
+
     useEffect(() => {
         fetchMoreData();
+        getNewsData();
     }, []);
 
     const fetchMoreData = () => {
@@ -171,22 +165,7 @@ function NewsList() {
         setPage(prevPage => prevPage + 1);
     };
 
-    const checkOverlap = (newPos, existingPositions, newWidth, newHeight) => {
-        for (let pos of existingPositions) {
-            // 각 요소의 경계를 확인
-            const horizontalOverlap = 
-                newPos.x < (pos.x + pos.width + 10) && 
-                (newPos.x + newWidth + 10) > pos.x;
-            const verticalOverlap = 
-                newPos.y < (pos.y + pos.height + 10) && 
-                (newPos.y + newHeight + 10) > pos.y;
-
-            if (horizontalOverlap && verticalOverlap) {
-                return true; // 겹침 발생
-            }
-        }
-        return false; // 겹치지 않음
-    };
+    
 
     return (
         <>
@@ -216,7 +195,7 @@ function NewsList() {
                     padding: '30px',
                     margin: '0 auto'
                 }}>
-                    {items.map((item, index) => (
+                    {news.map((item, index) => (
                         <KeywordCloud 
                             key={index}
                             onClick={() => navigate(`/new/?id=${item.id}&category=${category}`)}
@@ -224,7 +203,7 @@ function NewsList() {
                             <NewsTitle>{item.title}</NewsTitle>
                             <KeywordContainer>
                                 <Keywords>
-                                    {item.keyWord.map((keyword, kidx) => (
+                                    {item.keyword.map((keyword, kidx) => (
                                         <Keyword key={kidx}>
                                             {keyword}
                                         </Keyword>

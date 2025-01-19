@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-
-
 import { Button } from 'react-bootstrap';
-
-
+import { BsFillVolumeUpFill } from 'react-icons/bs';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const NewContainer = styled.div`
   width: 100%;
@@ -60,6 +60,13 @@ const NewsCard = styled.div`
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  
+  &:hover {
+    box-shadow: 0 4px 12px rgba(126, 55, 249, 0.25);
+    transform: translateY(-2px);
+  }
 `;
 
 const Title = styled.h2`
@@ -77,25 +84,85 @@ const NewsContent = styled.p`
   padding-top: 10px;
 `;
 
-function News() {
-  const news = {
-    title: "뉴스 제목",
-    keywords: ["키워드1", "키워드2", "키워드3"],
-    content: "뉴스 내용이 여기에 들어갑니다..."
-  };
+const NewsUrl = styled.a`
+  color: #7E37F9;
+  text-decoration: none;
+  font-size: 16px;
+  margin-top: 10px;
+  display: block;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
-  const handleSpeak = () => {
-    const speech = new SpeechSynthesisUtterance(news.content);
-    window.speechSynthesis.speak(speech);
-  };
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+`;
+
+const SpeakerButton = styled(Button)`
+  background-color: #7E37F9;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  
+  &:hover {
+    background-color: #6422e0;
+  }
+`;
+
+function News() {
+  
+  const { id } = useParams();
+
+  const [news, setNews] = useState({
+    title: "뉴스 제목",
+    keyword: ["키워드1", "키워드2", "키워드3"],
+    summary: "뉴스 내용이 여기에 들어갑니다...",
+    newsLink: "https://www.google.com"
+  });
 
   
+  useEffect(() => {
+    let params = new URLSearchParams(window.location.search);
+
+    // id 값 추출
+    let idValue = params.get('id');
+    console.log(idValue);
+    const fetchNewsDetail = async () => { 
+      const response = await axios.get(`https://easynews.o-r.kr/v1/category/${idValue}`);
+      
+       let item = response.data.data;
+      const newsData = {
+        id: item.id,
+        title: item.title,
+        summary: item.summary,
+        newsLink: item.newsLink,
+        keyword: item.keyword
+            .replace(/[\[\]]/g, '') // 대괄호 제거
+            .split(',')             // 쉼표로 분리
+            .map(k => k.trim())     // 각 항목의 앞뒤 공백 제거
+      }
+      
+      setNews(newsData);
+    };
+    fetchNewsDetail();
+  }, []);
+  
+
+  const handleSpeak = () => {
+    const speech = new SpeechSynthesisUtterance(news.summary);
+    window.speechSynthesis.speak(speech);
+  };
 
   return (
     <NewContainer>
       <Header>
         <Keywords>
-          {news.keywords.map((keyword, index) => (
+          {news.keyword.map((keyword, index) => (
             <Keyword key={index}>{keyword}</Keyword>
           ))}
         </Keywords>
@@ -105,14 +172,19 @@ function News() {
       </Header>
       <Body>
         <Content>
-          <NewsCard onClick={handleSpeak}>
+          <NewsCard>
             <Title>{news.title}</Title>
-            <NewsContent>{news.content}</NewsContent>
-            
+            <NewsContent>{news.summary}</NewsContent>
+            <ButtonContainer>
+              <NewsUrl href={news.newsLink} target="_blank" rel="noopener noreferrer">
+                원문 보기
+              </NewsUrl>
+              <SpeakerButton onClick={handleSpeak}>
+                <BsFillVolumeUpFill />
+              </SpeakerButton>
+            </ButtonContainer>
           </NewsCard>
         </Content>
-          
-        
       </Body>
     </NewContainer>
   );

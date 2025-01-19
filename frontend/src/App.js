@@ -5,7 +5,7 @@ import Category from './pages/Category';
 import NewsList from './pages/NewsList';
 import NavBar from './components/NavBar';
 import News from './pages/News';
-
+import Search from './pages/Search';  
 function App() {
 
   return (
@@ -24,6 +24,7 @@ function App() {
         <Route path="/" element={<Category />} />
         <Route path="/category/*" element={<NewsList />} />
         <Route path="/new" element={<News />} />
+        <Route path="/search" element={<Search />} />
       </Routes>
       <div style={{ 
         position: 'fixed', 
