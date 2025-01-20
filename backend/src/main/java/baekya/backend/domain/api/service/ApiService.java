@@ -48,37 +48,34 @@ import java.util.Map;
 
         private static final String PROMPT_TEMPLATE = """
     다음 웹사이트: %s 에서 최신 %s 한국 일간 뉴스 기사를 요약하세요.
-    정확히 4개의 기사를 엄격한 JSON 배열 형식으로 제공하세요. 각 기사는 다음 필드를 포함해야 합니다:
+    정확히 3개의 기사를 엄격한 JSON 배열 형식으로 제공하세요. 각 기사는 다음 필드를 포함해야 합니다.  본문 내부에는 ""쌍따음표,''따음표를 절대 사용하지 않습니다 ):
     - "title": 뉴스 기사의 제목 (문자열).
-    - "summary": 기사 내용에 대한 4-5문장 요약 (문자열).
+    - "summary": 기사 내용에 대한 3문장 요약 (문자열).
     - "keywords": 기사에서 중요한 4-5개의 키워드 목록 (문자열 배열).
-    - "newsLink": 뉴스 기사 URL (문자열).
+    - "newsLink": 해당 뉴스의 기사 상세 URL. 링크 클릭시 해당 뉴스로 이동하도록 합니다 (문자열).
 
-    JSON 응답은 다음 구조를 엄격히 따라야 합니다:
+    JSON 응답은 다음 형식을 엄격히 따라야 합니다. 각 가사의 필드는 위의 내용을 반드시 포함합니다. 예시가 아닌 실제 데이터 입니다.:
+    특수문자의 경우 " ' , ? ! { } ( ) [ ] : / . = & 만 허용합니다.
+    본문 내부에는 ""쌍따음표,''따음표를 절대 사용하지 않습니다. :
+    
     [
         {
-            "title": "예시 제목 1",
-            "summary": "이것은 예시 요약입니다.",
+            "title": "예시 제목입니다. 본문 내부에는 쌍따음표("") 따음표('') 를 절대 사용하지 않습니다.",
+            "summary": "이것은 예시 요약입니다. 요약 내부에는 내부에는 쌍따음표("") 따음표('') 를 절대 사용하지 않습니다.",
             "keywords": ["키워드1", "키워드2", "키워드3", "키워드4"],
-            "newsLink": "https://example.com/article1"
+            "newsLink": "해당 뉴스의 기사 상세 URL. 링크 클릭시 해당 뉴스로 이동하도록 합니다 (문자열)."
         },
         {
-            "title": "예시 제목 2",
-            "summary": "이것은 또 다른 예시 요약입니다.",
+            "title": "예시 제목입니다. 본문 내부에는 쌍따음표("") 따음표('') 를 절대 사용하지 않습니다.",
+            "summary": "이것은 예시 요약입니다. 요약 내부에는 내부에는 쌍따음표("") 따음표('') 를 절대 사용하지 않습니다.",
             "keywords": ["키워드1", "키워드2", "키워드3", "키워드4"],
-            "newsLink": "https://example.com/article2"
+            "newsLink": "해당 뉴스의 기사 상세 URL. 링크 클릭시 해당 뉴스로 이동하도록 합니다 (문자열)."
         },
         {
-            "title": "예시 제목 3",
-            "summary": "이것은 세 번째 예시 요약입니다.",
+            "title": "예시 제목입니다. 본문 내부에는 쌍따음표("") 따음표('') 를 절대 사용하지 않습니다.",
+            "summary": "이것은 예시 요약입니다. 요약 내부에는 내부에는 쌍따음표("") 따음표('') 를 절대 사용하지 않습니다.",
             "keywords": ["키워드1", "키워드2", "키워드3", "키워드4"],
-            "newsLink": "https://example.com/article3"
-        },
-        {
-            "title": "예시 제목 4",
-            "summary": "이것은 네 번째 예시 요약입니다.",
-            "keywords": ["키워드1", "키워드2", "키워드3", "키워드4"],
-            "newsLink": "https://example.com/article4"
+            "newsLink": "해당 뉴스의 기사 상세 URL. 링크 클릭시 해당 뉴스로 이동하도록 합니다 (문자열)."
         }
     ]
 
@@ -87,18 +84,20 @@ import java.util.Map;
 
         /**
          * Perplexity API 프롬프트 생성
+         * 이 메소드는 주어진 카테고리에 대한 다양한 출처에서 뉴스 기사를 가져와, 이를 퍼플렉시티 API에 전달할 프롬프트로 변환합니다.
          */
         public String generatePrompt(String category) {
-            final String baseUrl = "https://news.naver.com/section/";
-            final String urlSuffix = switch (category) {
-                case "politics" -> "100";
-                case "economy" -> "101";
-                case "social" -> "102";
-                case "life" -> "103";
-                default -> throw new IllegalArgumentException("Invalid category description: " + category);
-            };
-            final String categoryUrl = baseUrl + urlSuffix;
-            return String.format(PROMPT_TEMPLATE, category, categoryUrl);
+            // 카테고리에 대한 설명을 가져옵니다.
+            String description = DESCRIPTIONS.get(category);
+            if (description == null) {
+                throw new IllegalArgumentException("Invalid category description: " + category);
+            }
+
+            // 카테고리에 대한 뉴스 검색 쿼리 생성
+            String query = String.format("한국의 %s 관련 최신 뉴스", description);
+
+            // 해당 쿼리를 사용하여 다양한 뉴스 출처에서 뉴스를 가져오는 프롬프트 생성
+            return String.format(PROMPT_TEMPLATE, category, query);
         }
 
         /**
@@ -187,12 +186,17 @@ import java.util.Map;
                 // 결과 리스트 생성
                 List<Map<String, Object>> articles = new ArrayList<>();
                 for (JsonNode articleNode : rootNode) {
-                    Map<String, Object> articleData = new HashMap<>();
-                    articleData.put("title", articleNode.path("title").asText(null));
-                    articleData.put("summary", articleNode.path("summary").asText(null));
-                    articleData.put("keywords", objectMapper.convertValue(articleNode.path("keywords"), List.class));
-                    articleData.put("newsLink", articleNode.path("newsLink").asText(null));
-                    articles.add(articleData);
+                    try {
+                        Map<String, Object> articleData = new HashMap<>();
+                        articleData.put("title", articleNode.path("title").asText(null));
+                        articleData.put("summary", articleNode.path("summary").asText(null));
+                        articleData.put("keywords", objectMapper.convertValue(articleNode.path("keywords"), List.class));
+                        articleData.put("newsLink", articleNode.path("newsLink").asText(null));
+                        articles.add(articleData);
+                    }catch (Exception e){
+                        log.warn("Failed to parse article: {}", articleNode, e);
+                        continue;
+                    }
                 }
                 return articles;
             } catch (Exception e) {
