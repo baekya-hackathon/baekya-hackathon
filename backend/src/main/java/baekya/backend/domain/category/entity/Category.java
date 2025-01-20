@@ -7,7 +7,6 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Builder
 @Getter
 @AllArgsConstructor @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Category")
@@ -22,4 +21,9 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Article> articles;
+
+    @Builder
+    public Category(CategoryType name) {
+        this.name = name;
+    }
 }
